@@ -13,10 +13,8 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
@@ -87,34 +85,11 @@ export default function LoginPage() {
     }
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
-
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      })
-
-      if (result?.error) {
-        setError("Credenciais inválidas. Tente novamente.")
-      } else {
-        router.push("/dashboard")
-      }
-    } catch (error) {
-      setError("Ocorreu um erro ao fazer login. Tente novamente.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const handleGoogleLogin = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/dashboard" })
+      console.log("Iniciando register com Google...")
+
     } catch (error) {
       setError("Ocorreu um erro ao fazer login com Google. Tente novamente.")
       setIsLoading(false)
@@ -178,11 +153,11 @@ export default function LoginPage() {
           <CardHeader className="space-y-1">
             <motion.div variants={itemVariants}>
               <CardTitle className="text-3xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                Entrar
+                Register
               </CardTitle>
             </motion.div>
             <motion.div variants={itemVariants}>
-              <CardDescription className="text-center">Faça login na sua conta para continuar</CardDescription>
+              <CardDescription className="text-center">Registre na sua conta Google para continuar</CardDescription>
             </motion.div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -220,26 +195,12 @@ export default function LoginPage() {
                     </g>
                   </svg>
                 </div>
-                <span className="relative z-10 font-medium">Entrar com Google</span>
+                <span className="relative z-10 font-medium">Registrar com Google</span>
                 <div className="absolute inset-0 w-0 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out group-hover:w-full opacity-0 group-hover:opacity-10"></div>
               </Button>
             </motion.div>
 
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <motion.p variants={itemVariants} className="text-sm text-gray-600">
-              Não tem uma conta?{" "}
-              <motion.span whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
-                <Button
-                  variant="link"
-                  className="p-0 h-auto text-blue-600 hover:text-blue-800 font-medium"
-                  onClick={() => router.push("/register")}
-                >
-                  Registre-se
-                </Button>
-              </motion.span>
-            </motion.p>
-          </CardFooter>
         </Card>
       </motion.div>
     </div>
