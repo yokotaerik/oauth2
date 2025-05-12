@@ -7,12 +7,40 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { getCurrentUser, logout } from "@/util/apiUtil";
+import { get } from "http";
+import { redirect } from "next/navigation";
 
 export default function Dashboard() {
-  const [userName, setUserName] = useState("Eduardo");
+
+  const [userName, setUserName] = useState(null);
+  const [imgUser, setImgUser] = useState("/placeholder.svg?height=40&width=40");
   const [dots, setDots] = useState<{ width: string; height: string; top: string; left: string }[]>([]);
 
+  const handleSair = () => {
+    logout()
+    redirect("/login")
+  };
+
   useEffect(() => {
+    getCurrentUser()
+      .then((user) => {
+        console.log("User data:", user);
+        if (user) {
+          setUserName(user.name);
+          setImgUser(user.imageUrl);
+        } else {
+          console.log("User not found");
+          redirect("/login")
+        }
+      })
+      .catch((error) => {
+        redirect("/login")
+        console.error("Error fetching user data:", error);
+      });
+
+
+
     const generatedDots = Array.from({ length: 50 }).map(() => ({
       width: Math.random() * 10 + 5 + "px",
       height: Math.random() * 10 + 5 + "px",
@@ -67,10 +95,12 @@ export default function Dashboard() {
                 <Settings className="h-5 w-5" />
                 Configurações
               </Link>
-              <Button variant="outline" className="mt-auto flex items-center gap-2 justify-start">
-                <LogOut className="h-5 w-5" />
-                Sair
-              </Button>
+              <CardFooter className="p-3">
+                <Button variant="outline" className="w-full flex items-center gap-2" onClick={handleSair}>
+                  <LogOut className="h-5 w-5" />
+                  Sair
+                </Button>
+              </CardFooter>
             </nav>
           </SheetContent>
         </Sheet>
@@ -87,7 +117,9 @@ export default function Dashboard() {
           <Card>
             <CardContent className="p-6 flex flex-col items-center text-center">
               <Avatar className="h-24 w-24 mb-4">
-                <AvatarImage src="/placeholder.svg?height=96&width=96" alt="Avatar do usuário" />
+                <AvatarImage src={imgUser} alt="Avatar" />
+                {/* <AvatarImage src={user?.image} alt="Avatar" /> */}
+                {/* <AvatarImage src={user?.image} alt="Avatar" /> */}
                 <AvatarFallback>ED</AvatarFallback>
               </Avatar>
               <h2 className="text-xl font-bold">Olá, {userName}</h2>
@@ -122,12 +154,10 @@ export default function Dashboard() {
                 </Link>
               </nav>
             </CardContent>
-            <CardFooter className="p-3">
-              <Button variant="outline" className="w-full flex items-center gap-2">
-                <LogOut className="h-5 w-5" />
-                Sair
-              </Button>
-            </CardFooter>
+            <Button variant="outline" className="w-full flex items-center gap-2" onClick={handleSair}>
+              <LogOut className="h-5 w-5" />
+              Sair
+            </Button>
           </Card>
         </aside>
 

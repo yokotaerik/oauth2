@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { GOOGLE_AUTH_URL } from "../token"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -85,11 +86,10 @@ export default function RegisterPage() {
     }
   }, [])
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleRegister = async () => {
     setIsLoading(true)
     try {
-      console.log("Iniciando register com Google...")
-
+      window.location.href = GOOGLE_AUTH_URL
     } catch (error) {
       setError("Ocorreu um erro ao fazer login com Google. Tente novamente.")
       setIsLoading(false)
@@ -170,7 +170,7 @@ export default function RegisterPage() {
               <Button
                 variant="outline"
                 className="w-full relative h-12 overflow-hidden group transition-all duration-300 ease-in-out bg-white hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 border-2"
-                onClick={handleGoogleLogin}
+                onClick={handleGoogleRegister}
                 disabled={isLoading}
               >
                 <div className="absolute left-4 flex h-5 w-5 items-center justify-center">

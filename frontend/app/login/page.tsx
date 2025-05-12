@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { GOOGLE_AUTH_URL } from "../token"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -114,7 +115,7 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setIsLoading(true)
     try {
-      await signIn("google", { callbackUrl: "/dashboard" })
+      window.location.href = GOOGLE_AUTH_URL
     } catch (error) {
       setError("Ocorreu um erro ao fazer login com Google. Tente novamente.")
       setIsLoading(false)
